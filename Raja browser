@@ -2,27 +2,57 @@
 class RajaKernel {
     constructor() {
         console.log("🔱 Raja Kernel Initialized: Systems Active");
+        this.runSystem();
+    }
+
+    runSystem() {
         this.applySecurityLayer();
         this.optimizePerformance();
+        this.startObserver(); // कचरे को हमेशा के लिए हटाने के लिए
     }
 
-    // लेयर 1: वेबसाइट की सुरक्षा और सफाई
+    // लेयर 1: विज्ञापनों और कचरे को पूरी तरह खत्म करना
     applySecurityLayer() {
-        // फालतू कचरा और विज्ञापनों को मारना
-        const garbage = ['[id*="ad"]', '.popup-banner', '.promo-box'];
+        const garbage = [
+            '[id*="ad"]', 
+            '[class*="ad"]', 
+            '.popup-banner', 
+            '.promo-box', 
+            'iframe[src*="doubleclick"]',
+            'div[class*="banner"]'
+        ];
+        
         garbage.forEach(selector => {
-            document.querySelectorAll(selector).forEach(el => el.style.display = 'none');
+            document.querySelectorAll(selector).forEach(el => el.remove());
         });
-        console.log("🛡️ Security Layer: Cleaned successfully.");
+        console.log("🛡️ Security Layer: Ads Cleared.");
     }
 
-    // लेयर 2: फॉर्म ऑटो-डिटेक्शन (ताकि आप फॉर्म भरने में माहिर बन सको)
+    // लेयर 2: स्मार्ट ऑटो-फॉर्म और परफॉरमेंस
     optimizePerformance() {
-        const forms = document.querySelectorAll('input, select');
-        forms.forEach(form => {
-            form.style.border = "2px solid #FFD700"; // राजाराम का गोल्ड बॉर्डर
-            form.setAttribute('placeholder', 'Raja AI Ready...');
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            // राजाराम का गोल्ड बॉर्डर
+            input.style.border = "2px solid #FFD700"; 
+            input.style.borderRadius = "5px";
+            
+            // इनपुट बॉक्स को 'राजा AI' के लिए तैयार करना
+            input.setAttribute('placeholder', 'Raja AI Ready...');
+            
+            // ऑटो-फॉर्म फिल लॉजिक (जोड़ने के लिए)
+            if (input.type === 'text' && input.name.toLowerCase().includes('name')) {
+                input.setAttribute('title', 'Raja AI Click to Fill');
+            }
         });
+    }
+
+    // लेयर 3: कचरे पर नजर रखने वाला गार्ड
+    startObserver() {
+        const observer = new MutationObserver(() => {
+            this.applySecurityLayer();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+        console.log("🛡️ Raja Guard: Watching for new ads...");
     }
 }
 
