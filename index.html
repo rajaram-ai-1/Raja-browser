@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raja Nexus Browser</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. ओपेरा स्टाइल प्रीमियम साइडबार -->
+    <div class="sidebar">
+        <div class="sidebar-btn active" onclick="goHome()" title="Home">🏠</div>
+        <div class="sidebar-btn" title="Raja AI" onclick="loadUrl('https://streamlit.app')">🤖</div>
+        <div class="sidebar-btn" title="WhatsApp" onclick="loadUrl('https://whatsapp.com')">💬</div>
+        <div class="sidebar-btn" title="Auto-Fill Settings" onclick="openSettings()">🔒</div>
+    </div>
+
+    <!-- 2. मुख्य ब्राउज़र एरिया -->
+    <div class="browser-core">
+        
+        <!-- टॉप नेविगेशन बार -->
+        <div class="top-bar">
+            <button class="nav-btn" onclick="goBack()">⬅️</button>
+            <button class="nav-btn" onclick="refreshPage()">🔄</button>
+            <input type="text" id="urlInput" class="search-bar" placeholder="Search securely or enter URL..." onkeydown="if(event.key === 'Enter') handleSearch()">
+        </div>
+
+        <!-- मुख्य वेब व्यू कंटेनर -->
+        <div class="display-area" id="displayArea">
+            
+            <!-- होम स्क्रीन (स्पीड डायल - कमाई जोन) -->
+            <div id="homeScreen" class="home-screen">
+                <div class="logo">RAJA NEXUS</div>
+                <div class="speed-dial">
+                    <!-- अपना अमेज़न एफिलिएट लिंक यहाँ बदलें -->
+                    <a href="https://amazon.in" target="_blank" class="dial-item">🛒 Amazon</a>
+                    <a href="https://flipkart.com" target="_blank" class="dial-item">🛍️ Flipkart</a>
+                    <a href="#" onclick="loadUrl('https://google.com')" class="dial-item">🔍 Google</a>
+                    <a href="https://streamlit.app" target="_blank" class="dial-item">⚡ Raja AI</a>
+                </div>
+            </div>
+
+            <!-- ऑटो-फिल और रेफरल सेटिंग पेज -->
+            <div id="settingsScreen" class="settings-screen" style="display: none;">
+                <h2>🔒 Auto-Fill & Referral Hub</h2>
+                <p>Features are currently: <span id="lockStatus" style="color: #ff4500; font-weight: bold;">LOCKED 🔒</span></p>
+                
+                <!-- रेफरल ट्रैकर कार्ड -->
+                <div class="referral-box">
+                    <h3>Invite 3 Friends to Unlock Auto-Fill Free</h3>
+                    <p>Your unique referral link will appear here.</p>
+                    <div class="counter">Invited Friends: <span id="refCount">0</span> / 3</div>
+                    <button class="unlock-btn" onclick="simulateReferral()">Simulate Invite (+1 Friend)</button>
+                    <p style="margin-top: 10px; font-size: 12px; color: #888;">Or pay ₹49 for instant lifetime access.</p>
+                </div>
+
+                <!-- ऑटो फिल फॉर्म डेटा -->
+                <div class="form-data-box">
+                    <h3>Your Auto-Fill Profile</h3>
+                    <input type="text" placeholder="Full Name" disabled>
+                    <input type="email" placeholder="Email Address" disabled>
+                    <input type="text" placeholder="Phone Number" disabled>
+                    <p style="color: #ff4500; font-size: 12px; margin-top: 5px;">*Unlock this feature by completing 3 referrals.</p>
+                </div>
+            </div>
+
+            <!-- असली वेबसाइट्स लोड करने के लिए सुरक्षित फ्रेम -->
+            <iframe id="webFrame" class="web-view" style="display: none;"></iframe>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
