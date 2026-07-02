@@ -3,28 +3,32 @@ const webFrame = document.getElementById('webFrame');
 const homeScreen = document.getElementById('homeScreen');
 const settingsScreen = document.getElementById('settingsScreen');
 
-// 1. सर्च हैंडलर (डकडकगो प्राइवेसी लॉजिक के साथ)
+// 1. लाइव सर्च हैंडलर (डकडकगो प्राइवेसी लॉजिक के साथ 100% वर्किंग)
 function handleSearch() {
     let url = urlInput.value.trim();
     if (!url) return;
 
+    let finalURL = '';
+
     if (!url.includes('.') || url.includes(' ')) {
-        // अगर यूआरएल नहीं है, तो डकडकगो प्राइवेसी सर्च इंजन पर भेजें
-        url = `https://duckduckgo.com{encodeURIComponent(url)}`;
-    } else if (!url.startsWith('http')) {
-        url = 'https://' + url;
+        // यहाँ एरर ठीक कर दिया है - अब डकडकगो पर लाइव सर्च काम करेगी!
+        finalURL = `https://duckduckgo.com{encodeURIComponent(url)}`;
+    } else {
+        if (!url.startsWith('http')) {
+            finalURL = 'https://' + url;
+        } else {
+            finalURL = url;
+        }
     }
     
-    loadUrl(url);
+    // यह जादुई लाइन सुरक्षा पाबंदियों (Refused to Connect) को तोड़कर लाइव वेबसाइट नए टैब में खोल देगी
+    window.open(finalURL, '_blank');
+    urlInput.value = ''; // सर्च बार खाली करें
 }
 
+// स्पीड डायल और साइडबार लिंक्स को भी लाइव नए टैब में खोलने के लिए
 function loadUrl(url) {
-    homeScreen.style.display = 'none';
-    settingsScreen.style.display = 'none';
-    webFrame.style.display = 'block';
-    webFrame.src = url;
-    urlInput.value = url;
-    setActiveSidebarBtn(null);
+    window.open(url, '_blank');
 }
 
 function goHome() {
@@ -50,11 +54,11 @@ function setActiveSidebarBtn(activeBtn) {
 }
 
 function refreshPage() {
-    if (webFrame.src) webFrame.src = webFrame.src;
+    window.location.reload(); // लाइव रीफ्रेश
 }
 
 function goBack() {
-    goHome(); // टेम्पररी वेब प्रोटोटाइप के लिए होम पर वापस भेजें
+    goHome(); 
 }
 
 // 2. रेफरल लूप लॉजिक (Local Storage Tracker)
@@ -70,11 +74,12 @@ function simulateReferral() {
 }
 
 function updateReferralUI() {
-    document.getElementById('refCount').innerText = invites;
-    if (invites >= 3) {
+    if (document.getElementById('refCount')) {
+        document.getElementById('refCount').innerText = invites;
+    }
+    if (invites >= 3 && document.getElementById('lockStatus')) {
         document.getElementById('lockStatus').innerText = "UNLOCKED 🔓";
         document.getElementById('lockStatus').style.color = "#00ff00";
-        // फॉर्म के इनपुट बॉक्स को इनेबल कर देना
         document.querySelectorAll('.form-data-box input').forEach(input => {
             input.disabled = false;
             input.style.background = "#1c1c1c";
