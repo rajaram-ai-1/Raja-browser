@@ -1,72 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raja Nexus Browser</title>
+    <title>Raja Browser Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- 1. ओपेरा स्टाइल प्रीमियम साइडबार -->
+    <!-- 1. ओपेरा स्टाइल प्रीमियम स्लिम साइडबार (बाईं तरफ) -->
     <div class="sidebar">
-        <div class="sidebar-btn active" onclick="goHome()" title="Home">🏠</div>
-        <div class="sidebar-btn" title="Raja AI" onclick="loadUrl('https://streamlit.app')">🤖</div>
-        <div class="sidebar-btn" title="WhatsApp" onclick="loadUrl('https://whatsapp.com')">💬</div>
-        <div class="sidebar-btn" title="Auto-Fill Settings" onclick="openSettings()">🔒</div>
+        <div class="sidebar-btn active" id="homeBtn" onclick="goHome()" title="होम पेज">🏠</div>
+        <div class="sidebar-btn" id="aiBtn" title="Raja AI" onclick="loadUrl('https://streamlit.app', 'aiBtn')">🤖</div>
+        <div class="sidebar-btn" id="notesBtn" title="त्वरित नोट्स" onclick="openNotes()">📝</div>
+        <div class="sidebar-btn" id="lockBtn" title="ऑटो-फिल सेटिंग्स" onclick="openSettings()">🔒</div>
     </div>
 
     <!-- 2. मुख्य ब्राउज़र एरिया -->
     <div class="browser-core">
         
-        <!-- टॉप नेविगेशन बार -->
+        <!-- क्रोम जैसा टॉप बार -->
         <div class="top-bar">
-            <button class="nav-btn" onclick="goBack()">⬅️</button>
-            <button class="nav-btn" onclick="refreshPage()">🔄</button>
-            <input type="text" id="urlInput" class="search-bar" placeholder="Search securely or enter URL..." onkeydown="if(event.key === 'Enter') handleSearch()">
+            <div class="nav-arrows">
+                <button class="nav-btn" onclick="goHome()" title="Home">🏠</button>
+                <button class="nav-btn" onclick="refreshPage()" title="Refresh">🔄</button>
+            </div>
+            
+            <!-- क्रोम जैसा एड्रेस बार जो वेबव्यू लोड होने पर एक्टिव होता है -->
+            <input type="text" id="urlInput" class="top-search-bar" placeholder="खोजें या URL दर्ज करें..." onkeydown="if(event.key === 'Enter') handleSearch()" style="display: none;">
+            
+            <!-- क्रोम का असली 3-डॉट्स मेनू बटन (दाईं तरफ) -->
+            <div class="menu-container">
+                <button class="three-dots-btn" onclick="toggleMenu()">⋮</button>
+                
+                <!-- क्रोम और डकडकगो के फीचर्स वाला जादुई ड्रॉपडाउन मेनू -->
+                <div id="chromeMenu" class="dropdown-menu">
+                    <div class="menu-item" onclick="goHome()">New tab <span class="shortcut">Ctrl+T</span></div>
+                    <div class="menu-item" onclick="loadUrl('https://duckduckgo.com', null)">New Incognito window <span class="shortcut">Ctrl+Shift+N</span></div>
+                    <div class="menu-divider"></div>
+                    <div class="menu-profile">
+                        <div class="profile-avatar">G</div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 13px;">Gootam (Raja Pro)</div>
+                            <div style="font-size: 11px; color: #888;">Signed in</div>
+                        </div>
+                    </div>
+                    <div class="menu-divider"></div>
+                    <div class="menu-item locked-feature" onclick="openSettings()">Passwords and autofill <span class="arrow">›</span></div>
+                    <div class="menu-item" onclick="openNotes()">History <span class="arrow">›</span></div>
+                    <div class="menu-item" onclick="alert('Downloads empty')">Downloads <span class="shortcut">Ctrl+J</span></div>
+                    <div class="menu-divider"></div>
+                    <div class="menu-item" onclick="burnData()" style="color: #ff4500; font-weight: bold;">🔥 Delete browsing data... <span class="shortcut">Ctrl+Shift+Del</span></div>
+                    <div class="menu-item" onclick="loadUrl('https://streamlit.app', 'aiBtn')">✨ Open Raja AI in Browser</div>
+                </div>
+            </div>
         </div>
 
-        <!-- मुख्य वेब व्यू कंटेनर -->
+        <!-- मुख्य डिस्प्ले एरिया -->
         <div class="display-area" id="displayArea">
             
-            <!-- होम स्क्रीन (स्पीड डायल - कमाई जोन) -->
+            <!-- 🛑 क्रोम जैसा क्लीन, मॉडर्न और प्रीमियम होम लेआउट (सेंटर डिज़ाइन) -->
             <div id="homeScreen" class="home-screen">
-                <div class="logo">RAJA NEXUS</div>
-                <div class="speed-dial">
-                    <!-- अपना अमेज़न एफिलिएट लिंक यहाँ बदलें -->
-                    <a href="https://amazon.in" target="_blank" class="dial-item">🛒 Amazon</a>
-                    <a href="https://flipkart.com" target="_blank" class="dial-item">🛍️ Flipkart</a>
-                    <a href="#" onclick="loadUrl('https://google.com')" class="dial-item">🔍 Google</a>
-                    <a href="https://streamlit.app" target="_blank" class="dial-item">⚡ Raja AI</a>
+                
+                <!-- बीच में आपका शानदार बिजली और ढाल वाला लोगो -->
+                <div class="center-logo-container">
+                    <img src="logo.png" alt="Raja Browser Pro" class="browser-logo-img" onerror="this.src='https://icons8.com'">
+                    <h1 class="logo-text">Google</h1>
                 </div>
+
+                <!-- क्रोम जैसा गोल किनारों वाला बड़ा सेंटर सर्च बार -->
+                <div class="center-search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="centerUrlInput" class="center-search-bar" placeholder="Ask Google or type a URL" onkeydown="if(event.key === 'Enter') handleCenterSearch()">
+                    <div class="search-right-btns">
+                        <span class="mic-icon" title="Voice Search">🎙️</span>
+                        <button class="ai-mode-btn" onclick="loadUrl('https://streamlit.app', 'aiBtn')">🪄 AI Mode</button>
+                    </div>
+                </div>
+                
+                <!-- ओपेरा जीएक्स जैसा थीम सेलेक्टर -->
+                <div class="theme-selector">
+                    <span>नियॉन लाइट्स:</span>
+                    <div class="theme-dot" style="background: #ff4500;" onclick="changeTheme('#ff4500')"></div>
+                    <div class="theme-dot" style="background: #00ff00;" onclick="changeTheme('#00ff00')"></div>
+                    <div class="theme-dot" style="background: #00bcff;" onclick="changeTheme('#00bcff')"></div>
+                </div>
+
+                <!-- क्रोम का 'Add Shortcut' प्लस ग्रिड (कमाई जोन) -->
+                <div class="shortcut-grid">
+                    <a href="#" onclick="event.preventDefault(); loadUrl('https://bing.com')" class="shortcut-item">
+                        <div class="shortcut-icon">🛒</div>
+                        <div class="shortcut-label">Amazon</div>
+                    </a>
+                    <a href="#" onclick="event.preventDefault(); loadUrl('https://wikipedia.org')" class="shortcut-item">
+                        <div class="shortcut-icon">🛍️</div>
+                        <div class="shortcut-label">Flipkart</div>
+                    </a>
+                    <a href="#" onclick="event.preventDefault(); loadUrl('https://bing.com')" class="shortcut-item">
+                        <div class="shortcut-icon">🔍</div>
+                        <div class="shortcut-label">Google</div>
+                    </a>
+                    <div class="shortcut-item" onclick="openSettings()">
+                        <div class="shortcut-icon-add">+</div>
+                        <div class="shortcut-label">Add shortcut</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- नोट्स पैड स्क्रीन -->
+            <div id="notesScreen" class="settings-screen" style="display: none;">
+                <h2>📝 Study Notes Pad</h2>
+                <p>पढ़ाई के दौरान अपने ज़रूरी नोट्स यहाँ लिखें। यह स्वतः सुरक्षित हो जाते हैं।</p>
+                <textarea id="notesArea" placeholder="यहाँ लिखना शुरू करें..." oninput="saveNotes()"></textarea>
+                <p style="color: var(--neon-color); font-size: 12px; margin-top: 5px;">✔ आपके नोट्स इसी कंप्यूटर पर सुरक्षित रूप से सहेजे जा रहे हैं।</p>
             </div>
 
             <!-- ऑटो-फिल और रेफरल सेटिंग पेज -->
             <div id="settingsScreen" class="settings-screen" style="display: none;">
                 <h2>🔒 Auto-Fill & Referral Hub</h2>
-                <p>Features are currently: <span id="lockStatus" style="color: #ff4500; font-weight: bold;">LOCKED 🔒</span></p>
+                <p>फीचर्स अभी हैं: <span id="lockStatus" style="color: var(--neon-color); font-weight: bold;">LOCKED 🔒</span></p>
                 
-                <!-- रेफरल ट्रैकर कार्ड -->
                 <div class="referral-box">
-                    <h3>Invite 3 Friends to Unlock Auto-Fill Free</h3>
-                    <p>Your unique referral link will appear here.</p>
-                    <div class="counter">Invited Friends: <span id="refCount">0</span> / 3</div>
+                    <h3>ऑटो-फिल मुफ्त में अनलॉक करने के लिए 3 दोस्तों को आमंत्रित करें</h3>
+                    <p>आपका रेफरल लिंक: <code style="background: #2a2a2a; padding: 4px; border-radius: 4px; color: #ff8c00;">https://github.io</code></p>
+                    <div class="counter">आमंत्रित मित्र: <span id="refCount">0</span> / 3</div>
                     <button class="unlock-btn" onclick="simulateReferral()">Simulate Invite (+1 Friend)</button>
-                    <p style="margin-top: 10px; font-size: 12px; color: #888;">Or pay ₹49 for instant lifetime access.</p>
                 </div>
 
-                <!-- ऑटो फिल फॉर्म डेटा -->
                 <div class="form-data-box">
-                    <h3>Your Auto-Fill Profile</h3>
-                    <input type="text" placeholder="Full Name" disabled>
-                    <input type="email" placeholder="Email Address" disabled>
-                    <input type="text" placeholder="Phone Number" disabled>
-                    <p style="color: #ff4500; font-size: 12px; margin-top: 5px;">*Unlock this feature by completing 3 referrals.</p>
+                    <h3>आपका ऑटो-फिल प्रोफाइल</h3>
+                    <input type="text" id="autoName" placeholder="पूरा नाम" disabled>
+                    <input type="email" id="autoEmail" placeholder="ईमेल पता" disabled>
+                    <input type="text" id="autoPhone" placeholder="फ़ोन नंबर" disabled>
+                    <button class="unlock-btn" id="saveFormBtn" onclick="saveFormData()" disabled style="background: #444; margin-top: 10px;">प्रोफ़ाइल सहेजें</button>
+                    <p id="saveMsg" style="color: #00ff00; font-size: 12px; margin-top: 5px; display: none;">प्रोफ़ाइल स्थानीय रूप से सुरक्षित सहेजी गई! ✔</p>
                 </div>
             </div>
 
-            <!-- असली वेबसाइट्स लोड करने के लिए सुरक्षित फ्रेम -->
-            <iframe id="webFrame" class="web-view" style="display: none;"></iframe>
+            <!-- क्रोम की तरह अंदर ही वेबसाइट खोलने के लिए व्यूपोर्ट -->
+            <iframe id="webFrame" name="browser_viewport" class="web-view" style="display: none;"></iframe>
         </div>
     </div>
 
