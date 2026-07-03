@@ -2,17 +2,28 @@ const urlInput = document.getElementById('urlInput');
 const webFrame = document.getElementById('webFrame');
 const homeScreen = document.getElementById('homeScreen');
 const settingsScreen = document.getElementById('settingsScreen');
+const notesScreen = document.getElementById('notesScreen');
 
-// 1. लाइव सर्च हैंडलर (डकडकगो प्राइवेसी लॉजिक के साथ अब 100% परफेक्ट काम करेगा)
+let searchCount = parseInt(localStorage.getItem('raja_search_count')) || 0;
+document.getElementById('searchCountBadge').innerText = searchCount;
+
+// डिफ़ॉल्ट थीम लोड करना
+let savedTheme = localStorage.getItem('raja_theme') || '#ff4500';
+document.documentElement.style.setProperty('--neon-color', savedTheme);
+
+// 1. लाइव सर्च हैंडलर (अब यह क्रोम की तरह आपके ब्राउज़र के अंदर ही वेबसाइट खोलेगा)
 function handleSearch() {
     let url = urlInput.value.trim();
     if (!url) return;
 
-    let finalURL = '';
+    searchCount++;
+    localStorage.setItem('raja_search_count', searchCount);
+    document.getElementById('searchCountBadge').innerText = searchCount;
 
+    let finalURL = '';
     if (!url.includes('.') || url.includes(' ')) {
-        // यहाँ पर मैंने /?q= और $ दोनों को सही तरीके से जोड़ दिया है
-        finalURL = `https://duckduckgo.com{encodeURIComponent(url)}`;
+        // अगर कोई सवाल है, तो बिंग सर्च को अंदर लोड करें (क्योंकि बिंग अंदर लोड होना अलाउ करता है)
+        finalURL = `https://bing.com{encodeURIComponent(url)}`;
     } else {
         if (!url.startsWith('http')) {
             finalURL = 'https://' + url;
@@ -21,33 +32,72 @@ function handleSearch() {
         }
     }
     
-    // यह जादुई लाइन सुरक्षा पाबंदियों को तोड़कर लाइव वेबसाइट या खोज परिणाम नए टैब में तुरंत खोल देगी
-    window.open(finalURL, '_blank');
-    urlInput.value = ''; // सर्च बार खाली करें
+    // यहाँ बदलाव किया है: यह क्रोम की तरह इसी स्क्रीन के अंदर फ्रेम में लोड होगा
+    loadUrlInFrame(finalURL);
 }
 
-// स्पीड डायल और साइडबार लिंक्स को भी लाइव नए टैब में खोलने के लिए
-function loadUrl(url) {
-    window.open(url, '_blank');
+// वेबसाइट को फ्रेम के अंदर ही लोड करने का फंक्शन
+function loadUrlInFrame(url) {
+    homeScreen.style.display = 'none';
+    settingsScreen.style.display = 'none';
+    notesScreen.style.display = 'none';
+    webFrame.style.display = 'block'; // फ्रेम को दिखाओ
+    webFrame.src = url; // वेबसाइट को इसके अंदर लोड करो
+    urlInput.value = url;
+    setActiveSidebarBtn(null);
+}
+
+// साइडबार या स्पीड डायल लिंक्स को भी अंदर ही खोलने के लिए
+function loadUrl(url, activeBtnId) {
+    loadUrlInFrame(url);
+    if(activeBtnId) setActiveSidebarBtn(document.getElementById(activeBtnId));
 }
 
 function goHome() {
-    if (homeScreen) homeScreen.style.display = 'flex';
-    if (settingsScreen) settingsScreen.style.display = 'none';
-    if (webFrame) {
-        webFrame.style.display = 'none';
-        webFrame.src = '';
-    }
+    homeScreen.style.display = 'flex';
+    settingsScreen.style.display = 'none';
+    notesScreen.style.display = 'none';
+    webFrame.style.display = 'none';
+    webFrame.src = '';
     urlInput.value = '';
-    setActiveSidebarBtn(document.querySelector('.sidebar-btn:nth-child(1)'));
+    setActiveSidebarBtn(document.getElementById('homeBtn'));
 }
 
 function openSettings() {
-    if (homeScreen) homeScreen.style.display = 'none';
-    if (webFrame) webFrame.style.display = 'none';
-    if (settingsScreen) settingsScreen.style.display = 'flex';
+    homeScreen.style.display = 'none';
+    webFrame.style.display = 'none';
+    notesScreen.style.display = 'none';
+    settingsScreen.style.display = 'flex';
     urlInput.value = 'raja://settings-autofill';
-    setActiveSidebarBtn(document.querySelector('.sidebar-btn:nth-child(4)'));
+    setActiveSidebarBtn(document.getElementById('lockBtn'));
+    
+    if(localStorage.getItem('auto_name')) {
+        document.getElementById('autoName').value = localStorage.getItem('auto_name');
+        document.getElementById('autoEmail').value = localStorage.getItem('auto_email');
+        document.getElementById('autoPhone').value = localStorage.getItem('auto_phone');
+    }
+}
+
+// 2. त्वरित नोट्स पैड लॉजिक
+function openNotes() {
+    homeScreen.style.display = 'none';
+    webFrame.style.display = 'none';
+    settingsScreen.style.display = 'none';
+    notesScreen.style.display = 'flex';
+    urlInput.value = 'raja://notes-pad';
+    setActiveSidebarBtn(document.getElementById('notesBtn'));
+    document.getElementById('notesArea').value = localStorage.getItem('raja_notes') || '';
+}
+
+function saveNotes() {
+    const text = document.getElementById('notesArea').value;
+    localStorage.setItem('raja_notes', text);
+}
+
+// 3. थीम कस्टमाइज़र लॉजिक
+function changeTheme(color) {
+    document.documentElement.style.setProperty('--neon-color', color);
+    localStorage.setItem('raja_theme', color);
 }
 
 function setActiveSidebarBtn(activeBtn) {
@@ -55,15 +105,12 @@ function setActiveSidebarBtn(activeBtn) {
     if(activeBtn) activeBtn.classList.add('active');
 }
 
-function refreshPage() {
-    window.location.reload(); // लाइव रीफ्रेश
+function refreshPage() { 
+    if (webFrame.src) webFrame.src = webFrame.src; 
 }
+function goBack() { goHome(); }
 
-function goBack() {
-    goHome(); 
-}
-
-// 2. रेफरल लूप लॉजिक (Local Storage Tracker)
+// 4. रेफरल काउंटर लॉजिक
 let invites = parseInt(localStorage.getItem('raja_invites')) || 0;
 updateReferralUI();
 
@@ -76,15 +123,35 @@ function simulateReferral() {
 }
 
 function updateReferralUI() {
-    if (document.getElementById('refCount')) {
-        document.getElementById('refCount').innerText = invites;
-    }
+    if (document.getElementById('refCount')) document.getElementById('refCount').innerText = invites;
     if (invites >= 3 && document.getElementById('lockStatus')) {
         document.getElementById('lockStatus').innerText = "UNLOCKED 🔓";
         document.getElementById('lockStatus').style.color = "#00ff00";
         document.querySelectorAll('.form-data-box input').forEach(input => {
             input.disabled = false;
-            input.style.background = "#1c1c1c";
         });
+        const saveBtn = document.getElementById('saveFormBtn');
+        saveBtn.disabled = false;
+        saveBtn.style.background = 'var(--neon-color)';
+    }
+}
+
+function saveFormData() {
+    localStorage.setItem('auto_name', document.getElementById('autoName').value);
+    localStorage.setItem('auto_email', document.getElementById('autoEmail').value);
+    localStorage.setItem('auto_phone', document.getElementById('autoPhone').value);
+    const msg = document.getElementById('saveMsg');
+    msg.style.display = 'block';
+    setTimeout(() => { msg.style.display = 'none'; }, 3000);
+}
+
+// 5. डेटा बर्न
+function burnData() {
+    if(confirm("क्या आप अपना पूरा डेटा, नोट्स और हिस्ट्री बर्न करना चाहते हैं?")) {
+        localStorage.clear();
+        searchCount = 0;
+        invites = 0;
+        alert("💥 सब कुछ पूरी तरह साफ कर दिया गया!");
+        window.location.reload();
     }
 }
