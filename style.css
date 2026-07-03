@@ -1,34 +1,68 @@
+:root {
+    --neon-color: #ff4500;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0c0c0c; color: white; display: flex; height: 100vh; overflow: hidden; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #1f221f; color: white; display: flex; height: 100vh; overflow: hidden; }
 
-/* साइडबार डिज़ाइन */
-.sidebar { width: 65px; height: 100vh; background: #050505; display: flex; flex-direction: column; align-items: center; padding-top: 20px; gap: 25px; border-right: 1px solid #1a1a1a; }
-.sidebar-btn { font-size: 22px; cursor: pointer; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; transition: 0.2s; color: #888; }
-.sidebar-btn:hover, .sidebar-btn.active { background: rgba(255, 69, 0, 0.1); color: #ff4500; border: 1px solid #ff4500; }
+/* ओपेरा स्टाइल साइडबार */
+.sidebar { width: 60px; height: 100vh; background: #131513; display: flex; flex-direction: column; align-items: center; padding-top: 20px; gap: 22px; border-right: 1px solid #2a2d2a; z-index: 10; }
+.sidebar-btn { font-size: 20px; cursor: pointer; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 10px; transition: 0.2s; color: #888; }
+.sidebar-btn:hover, .sidebar-btn.active { background: rgba(255, 69, 0, 0.05); color: var(--neon-color); border: 1px solid var(--neon-color); box-shadow: 0 0 8px rgba(255, 69, 0, 0.2); }
 
-/* मुख्य ब्राउज़र कोर */
-.browser-core { flex: 1; display: flex; flex-direction: column; height: 100vh; }
-.top-bar { height: 55px; background: #141414; display: flex; align-items: center; padding: 0 15px; gap: 12px; border-bottom: 1px solid #222; }
-.nav-btn { background: none; border: none; color: #ccc; font-size: 16px; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.nav-btn:hover { background: #2a2a2a; color: white; }
-.search-bar { flex: 1; padding: 8px 16px; background: #222; border: 1px solid #333; border-radius: 20px; color: white; font-size: 13px; outline: none; }
-.search-bar:focus { border-color: #ff4500; background: #2a2a2a; }
+/* मुख्य ढांचा */
+.browser-core { flex: 1; display: flex; flex-direction: column; height: 100vh; background: #1f221f; }
 
-/* डिस्प्ले एरिया */
-.display-area { flex: 1; position: relative; background: #121212; }
+/* क्रोम स्टाइल टॉप बार */
+.top-bar { height: 45px; background: #1c1e1c; display: flex; align-items: center; padding: 0 15px; justify-content: space-between; border-bottom: 1px solid #2d302d; position: relative; }
+.nav-arrows { display: flex; gap: 8px; }
+.nav-btn { background: none; border: none; color: #aaa; font-size: 15px; cursor: pointer; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.nav-btn:hover { background: #2d302d; color: white; }
+
+/* टॉप एड्रेस बार (वेबसाइट लोड होने पर दिखेगा) */
+.top-search-bar { flex: 1; margin: 0 20px; padding: 6px 15px; background: #2b2e2b; border: 1px solid #3a3e3a; border-radius: 15px; color: white; font-size: 13px; outline: none; }
+
+/* 3-डॉट्स मेनू बटन और ड्रॉपडाउन */
+.three-dots-btn { background: none; border: none; color: #aaa; font-size: 20px; cursor: pointer; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.three-dots-btn:hover { background: #2d302d; color: white; }
+.menu-container { position: relative; }
+.dropdown-menu { position: absolute; top: 35px; right: 0; width: 260px; background: #282b28; border: 1px solid #383c38; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: none; flex-direction: column; padding: 5px 0; z-index: 100; }
+.menu-item { padding: 8px 15px; font-size: 13px; color: #e0e0e0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.menu-item:hover { background: #333733; }
+.menu-item .shortcut { color: #888; font-size: 11px; }
+.menu-divider { height: 1px; background: #383c38; margin: 5px 0; }
+.menu-profile { padding: 8px 15px; display: flex; align-items: center; gap: 10px; }
+.profile-avatar { width: 30px; height: 30px; background: #ff4500; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+
+/* 🛑 क्रोम जैसा सेंटर होम स्क्रीन लेआउट */
+.display-area { flex: 1; position: relative; }
+.home-screen { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 50px; }
+.center-logo-container { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+.browser-logo-img { width: 80px; height: auto; border-radius: 20px; border: 2px solid var(--neon-color); }
+.logo-text { font-size: 56px; font-weight: bold; color: white; letter-spacing: -1px; }
+
+/* गोल कोनों वाला बड़ा क्रोम सर्च बार */
+.center-search-container { width: 100%; max-width: 560px; height: 46px; background: #2b2e2b; border: 1px solid transparent; border-radius: 24px; display: flex; align-items: center; padding: 0 15px; gap: 10px; margin-bottom: 25px; transition: background 0.2s, box-shadow 0.2s; }
+.center-search-container:hover, .center-search-container:focus-within { background: #323632; box-shadow: 0 1px 6px rgba(0,0,0,0.4); border-color: #444; }
+.center-search-bar { flex: 1; background: none; border: none; color: white; font-size: 15px; outline: none; }
+.search-right-btns { display: flex; align-items: center; gap: 12px; }
+.ai-mode-btn { background: rgba(255,69,0,0.15); border: 1px solid var(--neon-color); color: var(--neon-color); padding: 4px 12px; border-radius: 15px; font-size: 12px; cursor: pointer; font-weight: 600; }
+.ai-mode-btn:hover { background: var(--neon-color); color: white; }
+
+/* प्लस आइकॉन वाले शॉर्टकट्स ग्रिड */
+.shortcut-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; width: 100%; max-width: 480px; margin-top: 10px; }
+.shortcut-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: white; cursor: pointer; }
+.shortcut-icon { width: 44px; height: 44px; background: #2b2e2b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: 0.2s; }
+.shortcut-icon-add { width: 44px; height: 44px; background: #2b2e2b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #aaa; transition: 0.2s; }
+.shortcut-item:hover .shortcut-icon, .shortcut-item:hover .shortcut-icon-add { background: #383c38; }
+.shortcut-label { font-size: 11px; margin-top: 8px; color: #e8eaed; width: 75px; text-align: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+
+/* बाकी स्क्रीन्स और थीम्स */
+.theme-selector { display: flex; align-items: center; gap: 8px; margin-bottom: 25px; font-size: 12px; color: #888; }
+.theme-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 1px solid #555; }
 .web-view { width: 100%; height: 100%; border: none; background: white; }
-
-/* होम स्क्रीन / स्पीड डायल */
-.home-screen { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, #1a1a1a 0%, #0c0c0c 100%); }
-.logo { font-size: 46px; font-weight: bold; margin-bottom: 30px; background: linear-gradient(45deg, #ff4500, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 15px rgba(255,69,0,0.3); }
-.speed-dial { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 90%; max-width: 500px; }
-.dial-item { background: #1c1c1c; border: 1px solid #2d2d2d; padding: 18px; border-radius: 12px; text-align: center; color: white; text-decoration: none; font-size: 14px; transition: 0.2s; font-weight: 500; }
-.dial-item:hover { border-color: #ff4500; transform: translateY(-3px); background: #222; }
-
-/* सेटिंग स्क्रीन और फीचर्स */
-.settings-screen { padding: 40px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; height: 100%; overflow-y: auto; }
-.referral-box, .form-data-box { background: #1c1c1c; border: 1px solid #2d2d2d; padding: 20px; border-radius: 12px; }
-.counter { font-size: 20px; font-weight: bold; margin: 15px 0; color: #ff8c00; }
-.unlock-btn { background: #ff4500; border: none; color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-.unlock-btn:hover { background: #e03e00; }
-.form-data-box input { width: 100%; padding: 10px; margin-bottom: 10px; background: #2a2a2a; border: 1px solid #333; color: white; border-radius: 6px; }
+.settings-screen { padding: 40px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; height: 100%; overflow-y: auto; width: 100%; }
+.referral-box, .form-data-box { background: #232623; border: 1px solid #333633; padding: 20px; border-radius: 12px; width: 100%; }
+#notesArea { width: 100%; height: 260px; background: #232623; border: 1px solid #333633; color: white; padding: 15px; border-radius: 12px; font-size: 14px; resize: none; outline: none; margin-top: 15px; border-color: var(--neon-color); }
+.unlock-btn { background: var(--neon-color); border: none; color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.form-data-box input { width: 100%; padding: 10px; margin-bottom: 10px; background: #2a2d2a; border: 1px solid #3a3d3a; color: white; border-radius: 6px; outline: none; }
