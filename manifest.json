@@ -1,1 +1,29 @@
-
+{
+  "manifest_version": 3,
+  "name": "Raja Browser Pro",
+  "version": "3.0.0",
+  "description": "8-in-1 Ultra Smart & Secure Browser Engine. Features: Ad-Blocker, AI Mode, Data Burn & Tab Groups.",
+  "author": "Rajaram Pro",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Raja Command Center",
+    "default_icon": "logo.png"
+  },
+  "background": {
+    "service_worker": "Worker.js"
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "browsingData",
+    "webRequest",
+    "webRequestBlocking",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}
