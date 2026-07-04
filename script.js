@@ -120,3 +120,41 @@ class RajaSmartUI {
 window.onload = () => {
     window.rajaUI = new RajaSmartUI();
 };
+// --- 🔱 HTML बटन्स को एक्टिवेट करने वाले ग्लोबल ब्रिज फंक्शन्स ---
+
+function changeTheme(color) {
+    if(window.rajaUI) window.rajaUI.changeTheme(color);
+}
+
+function burnData() {
+    if(window.rajaUI) window.rajaUI.triggerDataBurn();
+}
+
+function handleCenterSearch() {
+    // यह काम पहले से Event Listener कर रहा है, इसलिए HTML को एरर देने से रोकने के लिए यह खाली है।
+}
+
+function goHome() {
+    document.getElementById('homeScreen').style.display = 'block';
+    if(document.getElementById('webFrame')) document.getElementById('webFrame').style.display = 'none';
+    if(document.getElementById('notesScreen')) document.getElementById('notesScreen').style.display = 'none';
+    if(document.getElementById('settingsScreen')) document.getElementById('settingsScreen').style.display = 'none';
+}
+
+function loadUrl(url, btnId) {
+    if(window.rajaUI) window.rajaUI.loadInFrame(url);
+}
+
+function openNotes() {
+    document.getElementById('homeScreen').style.display = 'none';
+    if(document.getElementById('webFrame')) document.getElementById('webFrame').style.display = 'none';
+    if(document.getElementById('settingsScreen')) document.getElementById('settingsScreen').style.display = 'none';
+    document.getElementById('notesScreen').style.display = 'block';
+}
+
+function openSettings() {
+    document.getElementById('homeScreen').style.display = 'none';
+    if(document.getElementById('webFrame')) document.getElementById('webFrame').style.display = 'none';
+    if(document.getElementById('notesScreen')) document.getElementById('notesScreen').style.display = 'none';
+    document.getElementById('settingsScreen').style.display = 'block';
+}
