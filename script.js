@@ -1,180 +1,122 @@
-const urlInput = document.getElementById('urlInput');
-const centerUrlInput = document.getElementById('centerUrlInput');
-const webFrame = document.getElementById('webFrame');
-const homeScreen = document.getElementById('homeScreen');
-const settingsScreen = document.getElementById('settingsScreen');
-const notesScreen = document.getElementById('notesScreen');
-const chromeMenu = document.getElementById('chromeMenu');
+// फाइल का नाम: script.js
+// काम: UI को कंट्रोल करना, स्मार्ट सर्च, टैब ग्रुप्स और AI मोड को चलाना
 
-let searchCount = parseInt(localStorage.getItem('raja_search_count')) || 0;
-if(document.getElementById('searchCountBadge')) document.getElementById('searchCountBadge').innerText = searchCount;
+console.log("🔱 Raja Browser Pro - Smart UI Engine Online!");
 
-let savedTheme = localStorage.getItem('raja_theme') || '#ff4500';
-document.documentElement.style.setProperty('--neon-color', savedTheme);
+class RajaSmartUI {
+    constructor() {
+        this.searchBar = document.getElementById('centerUrlInput');
+        this.displayArea = document.getElementById('displayArea');
+        this.activeTab = 'home'; // डिफ़ॉल्ट टैब
 
-// 3-डॉट्स मेनू को खोलने/बंद करने का लॉजिक
-function toggleMenu() {
-    chromeMenu.style.display = chromeMenu.style.display === 'flex' ? 'none' : 'flex';
-}
-
-// जब बाहर क्लिक करें तो मेनू बंद हो जाए
-document.addEventListener('click', function(event) {
-    const isClickInside = document.querySelector('.menu-container').contains(event.target);
-    if (!isClickInside) chromeMenu.style.display = 'none';
-});
-
-// सेंटर सर्च बार से खोजना
-function handleCenterSearch() {
-    let url = centerUrlInput.value.trim();
-    if (!url) return;
-    executeSearch(url);
-}
-
-// टॉप बार सर्च से खोजना
-function handleSearch() {
-    let url = urlInput.value.trim();
-    if (!url) return;
-    executeSearch(url);
-}
-
-// असली क्रोम और डकडकगो जैसा सर्च एक्जीक्यूशन
-function executeSearch(url) {
-    searchCount++;
-    localStorage.setItem('raja_search_count', searchCount);
-    if(document.getElementById('searchCountBadge')) document.getElementById('searchCountBadge').innerText = searchCount;
-
-    let finalURL = '';
-    if (!url.includes('.') || url.includes(' ')) {
-        finalURL = `https://bing.com{encodeURIComponent(url)}`;
-    } else {
-        if (!url.startsWith('http')) finalURL = 'https://' + url;
-        else finalURL = url;
+        this.initEventListeners();
+        this.loadSavedTheme();
     }
-    
-    // क्रोम की तरह अंदर ही लोड करना
-    loadUrlInFrame(finalURL);
-}
 
-function loadUrlInFrame(url) {
-    homeScreen.style.display = 'none';
-    settingsScreen.style.display = 'none';
-    notesScreen.style.display = 'none';
-    chromeMenu.style.display = 'none';
-    
-    webFrame.style.display = 'block';
-    webFrame.src = url;
-    
-    urlInput.style.display = 'block'; // टॉप यूआरएल बार दिखाएं
-    urlInput.value = url;
-    setActiveSidebarBtn(null);
-}
+    // 1. ⚡ सभी बटन्स और कीबोर्ड शॉर्टकट्स को एक्टिवेट करना
+    initEventListeners() {
+        // सेंटर सर्च बार में 'Enter' दबाने पर
+        if (this.searchBar) {
+            this.searchBar.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    this.handleSmartSearch(this.searchBar.value);
+                }
+            });
+        }
 
-function loadUrl(url, activeBtnId) {
-    loadUrlInFrame(url);
-    if(activeBtnId) setActiveSidebarBtn(document.getElementById(activeBtnId));
-}
-
-function goHome() {
-    homeScreen.style.display = 'flex';
-    settingsScreen.style.display = 'none';
-    notesScreen.style.display = 'none';
-    chromeMenu.style.display = 'none';
-    webFrame.style.display = 'none';
-    webFrame.src = '';
-    urlInput.style.display = 'none'; // होम पर टॉप यूआरएल बार छुपाएं
-    centerUrlInput.value = '';
-    setActiveSidebarBtn(document.getElementById('homeBtn'));
-}
-
-function openSettings() {
-    homeScreen.style.display = 'none';
-    webFrame.style.display = 'none';
-    notesScreen.style.display = 'none';
-    chromeMenu.style.display = 'none';
-    settingsScreen.style.display = 'flex';
-    urlInput.style.display = 'block';
-    urlInput.value = 'raja://settings-autofill';
-    setActiveSidebarBtn(document.getElementById('lockBtn'));
-    
-    if(localStorage.getItem('auto_name')) {
-        document.getElementById('autoName').value = localStorage.getItem('auto_name');
-        document.getElementById('autoEmail').value = localStorage.getItem('auto_email');
-        document.getElementById('autoPhone').value = localStorage.getItem('auto_phone');
+        // 'AI Mode' बटन के लिए
+        const aiBtn = document.querySelector('.ai-mode-btn');
+        if (aiBtn) {
+            aiBtn.addEventListener('click', () => this.activateAIMode());
+        }
     }
-}
 
-function openNotes() {
-    homeScreen.style.display = 'none';
-    webFrame.style.display = 'none';
-    settingsScreen.style.display = 'none';
-    chromeMenu.style.display = 'none';
-    notesScreen.style.display = 'flex';
-    urlInput.style.display = 'block';
-    urlInput.value = 'raja://notes-pad';
-    setActiveSidebarBtn(document.getElementById('notesBtn'));
-    document.getElementById('notesArea').value = localStorage.getItem('raja_notes') || '';
-}
+    // 2. 🧠 अल्ट्रा-स्मार्ट सर्च इंजन (URL vs Search Detection)
+    handleSmartSearch(query) {
+        let finalQuery = query.trim();
+        if (!finalQuery) return;
 
-function saveNotes() {
-    localStorage.setItem('raja_notes', document.getElementById('notesArea').value);
-}
+        console.log(`[SEARCH] Processing query: ${finalQuery}`);
 
-function changeTheme(color) {
-    document.documentElement.style.setProperty('--neon-color', color);
-    localStorage.setItem('raja_theme', color);
-}
-
-function setActiveSidebarBtn(activeBtn) {
-    document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
-    if(activeBtn) activeBtn.classList.add('active');
-}
-
-function refreshPage() { if (webFrame.src) webFrame.src = webFrame.src; }
-
-// रेफरल काउंटर
-let invites = parseInt(localStorage.getItem('raja_invites')) || 0;
-updateReferralUI();
-
-function simulateReferral() {
-    if (invites < 3) {
-        invites++;
-        localStorage.setItem('raja_invites', invites);
-        updateReferralUI();
+        // चेक करना कि यूजर ने वेबसाइट का नाम डाला है या कुछ सर्च किया है
+        const isUrl = finalQuery.includes('.') && !finalQuery.includes(' ');
+        
+        if (isUrl) {
+            // अगर URL है, तो 'https://' लगाकर सीधे वेबसाइट खोलें
+            const url = finalQuery.startsWith('http') ? finalQuery : `https://${finalQuery}`;
+            this.loadInFrame(url);
+        } else {
+            // अगर कोई सवाल है, तो उसे स्मार्ट तरीके से गूगल/बिंग पर सर्च करें
+            // (यहाँ आप अपनी कमाई वाला Affiliate लिंक भी लगा सकते हैं)
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(finalQuery)}`;
+            this.loadInFrame(searchUrl);
+        }
     }
-}
 
-function updateReferralUI() {
-    if (document.getElementById('refCount')) document.getElementById('refCount').innerText = invites;
-    if (invites >= 3 && document.getElementById('lockStatus')) {
-        document.getElementById('lockStatus').innerText = "UNLOCKED 🔓";
-        document.getElementById('lockStatus').style.color = "#00ff00";
-        document.querySelectorAll('.form-data-box input').forEach(input => input.disabled = false);
-        const saveBtn = document.getElementById('saveFormBtn');
-        if (saveBtn) {
-            saveBtn.disabled = false;
-            saveBtn.style.background = 'var(--neon-color)';
+    // 3. 🖥️ बिना पेज रीलोड किए वेबसाइट लोड करना (Vivaldi Style Tab Management)
+    loadInFrame(url) {
+        console.log(`[TAB] Loading: ${url}`);
+        
+        // पुरानी स्क्रीन को छुपाना और वेबसाइट वाले फ्रेम को दिखाना
+        let frame = document.getElementById('webFrame');
+        if (!frame) {
+            // अगर फ्रेम नहीं है, तो डायनामिक रूप से नया बना लें
+            frame = document.createElement('iframe');
+            frame.id = 'webFrame';
+            frame.className = 'web-view';
+            this.displayArea.appendChild(frame);
+        }
+        
+        document.getElementById('homeScreen').style.display = 'none';
+        frame.style.display = 'block';
+        frame.src = url;
+    }
+
+    // 4. 🤖 AI Mode (आपका अपना विजन)
+    activateAIMode() {
+        console.log("🪄 [AI] Initializing Raja AI Mode...");
+        const query = this.searchBar.value;
+        
+        if (query === "") {
+            alert("🔱 AI Mode: कृपया सर्च बार में अपना सवाल लिखें, फिर AI बटन दबाएं!");
+            return;
+        }
+
+        // यहाँ आपका अपना AI (Hugging Face / Streamlit) लोड होगा
+        alert(`Raja AI आपके सवाल "${query}" का जवाब तैयार कर रहा है...`);
+        // this.loadInFrame(`https://your-ai-app-link.com/?q=${query}`);
+    }
+
+    // 5. 🔥 डकडकगो (DuckDuckGo) डेटा बर्न को UI से ट्रिगर करना
+    triggerDataBurn() {
+        if (confirm("🚨 चेतावनी: क्या आप अपना सारा ब्राउज़िंग डेटा, कुकीज़ और हिस्ट्री जलाना चाहते हैं?")) {
+            
+            // Worker.js (बैकग्राउंड इंजन) को मैसेज भेजना
+            chrome.runtime.sendMessage({ action: "BURN_DATA" }, (response) => {
+                if (response && response.status === "Success") {
+                    alert("💥 " + response.message);
+                    window.location.reload(); // सब साफ होने के बाद पेज रिफ्रेश
+                }
+            });
+        }
+    }
+
+    // 6. 🎨 डायनामिक ओपेरा (Opera GX) थीम कंट्रोल
+    changeTheme(colorHex) {
+        document.documentElement.style.setProperty('--neon-color', colorHex);
+        localStorage.setItem('raja_theme', colorHex); // अगली बार के लिए सेव करना
+        console.log(`[THEME] Color changed to ${colorHex}`);
+    }
+
+    loadSavedTheme() {
+        const savedTheme = localStorage.getItem('raja_theme');
+        if (savedTheme) {
+            document.documentElement.style.setProperty('--neon-color', savedTheme);
         }
     }
 }
 
-function saveFormData() {
-    localStorage.setItem('auto_name', document.getElementById('autoName').value);
-    localStorage.setItem('auto_email', document.getElementById('autoEmail').value);
-    localStorage.setItem('auto_phone', document.getElementById('autoPhone').value);
-    const msg = document.getElementById('saveMsg');
-    if (msg) {
-        msg.style.display = 'block';
-        setTimeout(() => { msg.style.display = 'none'; }, 3000);
-    }
-}
-
-// डकडकगो जैसा डेटा बर्न
-function burnData() {
-    if(confirm("क्या आप अपना पूरा डेटा, नोट्स और हिस्ट्री बर्न करना चाहते हैं?")) {
-        localStorage.clear();
-        searchCount = 0;
-        invites = 0;
-        alert("💥 सब कुछ पूरी तरह साफ कर दिया गया!");
-        window.location.reload();
-    }
-}
+// जैसे ही पेज लोड हो, ब्राउज़र का दिमाग चालू कर दें
+window.onload = () => {
+    window.rajaUI = new RajaSmartUI();
+};
