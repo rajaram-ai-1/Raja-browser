@@ -1,1 +1,78 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Raja Command Center</title>
+    <style>
+        body {
+            width: 320px;
+            background: #131513;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 15px;
+            border: 1px solid #333;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #2a2d2a;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .logo { font-size: 24px; }
+        .title { font-size: 16px; font-weight: bold; color: #ff4500; }
+        
+        /* Stats Box */
+        .stats-box {
+            background: #1f221f;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        .stats-number { font-size: 28px; font-weight: bold; color: #00ff00; }
+        .stats-text { font-size: 12px; color: #aaa; }
 
+        /* Action Buttons */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+        .btn-ai { background: rgba(255, 69, 0, 0.1); color: #ff4500; border: 1px solid #ff4500; }
+        .btn-ai:hover { background: #ff4500; color: white; }
+        
+        .btn-burn { background: #ff0000; color: white; }
+        .btn-burn:hover { background: #cc0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">🔱</div>
+        <div class="title">Raja Browser Control</div>
+    </div>
+
+    <!-- Brave Style Ad-Blocker Stats -->
+    <div class="stats-box">
+        <div class="stats-number" id="adsBlocked">0</div>
+        <div class="stats-text">Ads & Trackers Blocked 🛡️</div>
+    </div>
+
+    <!-- Quick Actions -->
+    <button class="btn btn-ai" id="openAIBtn">✨ Open Raja AI</button>
+    <button class="btn btn-burn" id="burnDataBtn">🔥 BURN ALL DATA</button>
+
+    <script src="popup.js"></script>
+</body>
+</html>
