@@ -1,4 +1,4 @@
-// फाइल का नाम: RajaBrowserCore.js (Main Browser Logic)
+// फाइल का नाम: Raja browser (Main Browser Logic)
 // काम: ब्राउज़र को तुरंत स्टार्ट करना और 8 ब्राउज़र्स के फीचर्स को लोड करना
 
 class RajaBrowserSystem {
