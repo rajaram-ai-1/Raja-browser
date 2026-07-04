@@ -1,1 +1,57 @@
+// फाइल का नाम: RajaBrowserCore.js (Main Browser Logic)
+// काम: ब्राउज़र को तुरंत स्टार्ट करना और 8 ब्राउज़र्स के फीचर्स को लोड करना
 
+class RajaBrowserSystem {
+    constructor() {
+        this.systemName = "Raja Browser Pro";
+        this.version = "2.0.0 (Lightning Fast Mode)";
+        
+        // 8 ब्राउज़र्स के फीचर्स का कंट्रोल पैनल (यहाँ से आप फीचर्स ऑन/ऑफ कर सकते हैं)
+        this.activeModules = {
+            operaSidebar: true,       // ओपेरा जैसा साइडबार
+            braveShields: true,       // ब्रेव जैसा एड-ब्लॉकर
+            chromeLayout: true,       // क्रोम जैसा क्लीन UI
+            duckduckgoPrivacy: true,  // डकडकगो जैसा डेटा बर्न
+            vivaldiTabGroups: true,   // विवाल्डी जैसा टैब ग्रुप्स
+            safariSmoothness: true    // सफारी जैसे स्मूथ एनीमेशन
+        };
+    }
+
+    // ब्राउज़र स्टार्ट होते ही यह फंक्शन चलेगा (बिना किसी पासवर्ड के)
+    startBootSequence() {
+        console.log(`[SYSTEM] Booting ${this.systemName} at Lightning Speed...`);
+        this.launchBrowserInterface();
+    }
+
+    // 🌐 असली ब्राउज़र UI और फीचर्स को लोड करना
+    launchBrowserInterface() {
+        // आपका बनाया हुआ UI (index.html वाला) स्क्रीन पर दिखाएं
+        const browserUI = document.getElementById('displayArea');
+        if (browserUI) {
+            browserUI.style.display = 'block';
+        }
+        
+        console.log("[SYSTEM] 8-in-1 Features Loading...");
+        this.initializeFeatures();
+    }
+
+    // बैकग्राउंड में फीचर्स को चालू करना
+    initializeFeatures() {
+        if (this.activeModules.braveShields) {
+            console.log("🛡️ [SHIELD] Ads and Trackers Blocking Initialized.");
+            // यहाँ Worker.js को सिग्नल जाएगा विज्ञापनों को रोकने के लिए
+        }
+        if (this.activeModules.vivaldiTabGroups) {
+            console.log("🗂️ [TABS] Tab Grouping Ready.");
+        }
+        if (this.activeModules.operaSidebar) {
+            console.log("⚡ [SIDEBAR] Quick Access Panel Active.");
+        }
+    }
+}
+
+// जब HTML पूरी तरह लोड हो जाए, तब ब्राउज़र इंजन को बिना किसी रुकावट के चालू करें
+window.onload = () => {
+    const rajaEngine = new RajaBrowserSystem();
+    rajaEngine.startBootSequence();
+};
