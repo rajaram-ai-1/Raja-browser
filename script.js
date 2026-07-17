@@ -1,160 +1,93 @@
-// फाइल का नाम: script.js
-// काम: UI को कंट्रोल करना, स्मार्ट सर्च, टैब ग्रुप्स और AI मोड को चलाना
+// ==========================================
+// 🔱 RAJA BROWSER PRO - HOME PAGE ENGINE (script.js)
+// ==========================================
 
-console.log("🔱 Raja Browser Pro - Smart UI Engine Online!");
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("🔱 [Raja System] Home Page Engine (script.js) Online.");
 
-class RajaSmartUI {
-    constructor() {
-        this.searchBar = document.getElementById('centerUrlInput');
-        this.displayArea = document.getElementById('displayArea');
-        this.activeTab = 'home'; // डिफ़ॉल्ट टैब
+    const centerUrlInput = document.getElementById("centerUrlInput");
+    const aiModeBtn = document.getElementById("aiModeBtn");
+    const burnDataBtn = document.getElementById("burnDataBtn");
 
-        this.initEventListeners();
-        this.loadSavedTheme();
-    }
+    // 1. 🔍 स्मार्ट सर्च और यूआरएल रीडायरेक्टर (Smart Engine)
+    function handleSearch() {
+        let query = centerUrlInput.value.trim();
+        if (!query) return;
 
-    // 1. ⚡ सभी बटन्स और कीबोर्ड शॉर्टकट्स को एक्टिवेट करना
-    initEventListeners() {
-        // सेंटर सर्च बार में 'Enter' दबाने पर
-        if (this.searchBar) {
-            this.searchBar.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    this.handleSmartSearch(this.searchBar.value);
-                }
-            });
-        }
-
-        // 'AI Mode' बटन के लिए
-        const aiBtn = document.querySelector('.ai-mode-btn');
-        if (aiBtn) {
-            aiBtn.addEventListener('click', () => this.activateAIMode());
-        }
-    }
-
-    // 2. 🧠 अल्ट्रा-स्मार्ट सर्च इंजन (URL vs Search Detection)
-    handleSmartSearch(query) {
-        let finalQuery = query.trim();
-        if (!finalQuery) return;
-
-        console.log(`[SEARCH] Processing query: ${finalQuery}`);
-
-        // चेक करना कि यूजर ने वेबसाइट का नाम डाला है या कुछ सर्च किया है
-        const isUrl = finalQuery.includes('.') && !finalQuery.includes(' ');
-        
-        if (isUrl) {
-            // अगर URL है, तो 'https://' लगाकर सीधे वेबसाइट खोलें
-            const url = finalQuery.startsWith('http') ? finalQuery : `https://${finalQuery}`;
-            this.loadInFrame(url);
+        // अगर यूजर ने पूरा यूआरएल डाला है (जैसे: google.com या https://...)
+        if (query.startsWith("http://") || query.startsWith("https://")) {
+            window.location.href = query;
+        } else if (query.includes(".") && !query.includes(" ")) {
+            window.location.href = "https://" + query;
         } else {
-            // अगर कोई सवाल है, तो उसे स्मार्ट तरीके से गूगल/बिंग पर सर्च करें
-            // (यहाँ आप अपनी कमाई वाला Affiliate लिंक भी लगा सकते हैं)
-            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(finalQuery)}`;
-            this.loadInFrame(searchUrl);
+            // साधारण सर्च को सीधे गूगल सर्च पर भेजें (इसे आप बाद में बदल भी सकते हैं)
+            window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
         }
     }
 
-    // 3. 🖥️ बिना पेज रीलोड किए वेबसाइट लोड करना (Vivaldi Style Tab Management)
-    loadInFrame(url) {
-        console.log(`[TAB] Loading: ${url}`);
-        
-        // पुरानी स्क्रीन को छुपाना और वेबसाइट वाले फ्रेम को दिखाना
-        let frame = document.getElementById('webFrame');
-        if (!frame) {
-            // अगर फ्रेम नहीं है, तो डायनामिक रूप से नया बना लें
-            frame = document.createElement('iframe');
-            frame.id = 'webFrame';
-            frame.className = 'web-view';
-            this.displayArea.appendChild(frame);
+    // Enter बटन दबाने पर सर्च ट्रिगर करना
+    centerUrlInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            handleSearch();
         }
-        
-        document.getElementById('homeScreen').style.display = 'none';
-        frame.style.display = 'block';
-        frame.src = url;
-    }
+    });
 
-    // 4. 🤖 AI Mode (आपका अपना विजन)
-    activateAIMode() {
-        console.log("🪄 [AI] Initializing Raja AI Mode...");
-        const query = this.searchBar.value;
-        
-        if (query === "") {
-            alert("🔱 AI Mode: कृपया सर्च बार में अपना सवाल लिखें, फिर AI बटन दबाएं!");
-            return;
-        }
+    // 2. ✨ राजा एआई असिस्टेंट (Simulated AI Engine)
+    if (aiModeBtn) {
+        aiModeBtn.addEventListener("click", () => {
+            const query = centerUrlInput.value.trim();
+            if (!query) {
+                alert("🔱 Raja AI: पहले सर्च बॉक्स में अपना सवाल या कमांड टाइप करें!");
+                centerUrlInput.focus();
+                return;
+            }
 
-        // यहाँ आपका अपना AI (Hugging Face / Streamlit) लोड होगा
-        alert(`Raja AI आपके सवाल "${query}" का जवाब तैयार कर रहा है...`);
-        // this.loadInFrame(`https://your-ai-app-link.com/?q=${query}`);
-    }
-
-    // 5. 🔥 डकडकगो (DuckDuckGo) डेटा बर्न को UI से ट्रिगर करना
-    triggerDataBurn() {
-        if (confirm("🚨 चेतावनी: क्या आप अपना सारा ब्राउज़िंग डेटा, कुकीज़ और हिस्ट्री जलाना चाहते हैं?")) {
+            // एक हैकर-स्टाइल प्रोम्प्ट अलर्ट जो यूजर को इम्प्रेस कर देगा
+            alert(`⚡ [Raja AI Decrypting...]\n\nTARGET QUERY: "${query}"\n\n[Status]: राजा एआई आपके लिए डेटा तैयार कर रहा है...`);
             
-            // Worker.js (बैकग्राउंड इंजन) को मैसेज भेजना
-            chrome.runtime.sendMessage({ action: "BURN_DATA" }, (response) => {
-                if (response && response.status === "Success") {
-                    alert("💥 " + response.message);
-                    window.location.reload(); // सब साफ होने के बाद पेज रिफ्रेश
-                }
-            });
+            // यूजर को गूगल पर एआई समरी वाले पेज पर रीडायरेक्ट करना
+            window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query + " in detail")}`;
+        });
+    }
+
+    // 3. 🔥 डेटा बर्न बटन (Hardcore Privacy Destruction)
+    if (burnDataBtn) {
+        burnDataBtn.addEventListener("click", () => {
+            const confirmBurn = confirm("⚠️ खतरनाक कदम: क्या आप ब्राउज़र की सारी हिस्ट्री, कुकीज़ और कैशे हमेशा के लिए नष्ट करना चाहते हैं?");
+            
+            if (confirmBurn) {
+                // बटन पर एनीमेशन इफ़ेक्ट देना
+                burnDataBtn.innerHTML = "🔥 BURNING...";
+                burnDataBtn.style.background = "#ff0000";
+                burnDataBtn.style.color = "#000";
+
+                // Background Worker को डेटा डिलीट करने का सिग्नल भेजना
+                chrome.runtime.sendMessage({ action: "BURN_DATA" }, (response) => {
+                    if (chrome.runtime.lastError) {
+                        console.error("Error:", chrome.runtime.lastError);
+                        alert("❌ एरर: सिस्टम बैकग्राउंड इंजन से संपर्क टूट गया!");
+                        resetBurnButton();
+                        return;
+                    }
+
+                    if (response && response.status === "Success") {
+                        // धमाका अलर्ट!
+                        alert(`💥 BOOM!!!\n\n${response.message}\n\nसिस्टम अब पूरी तरह से सुरक्षित और साफ़ है।`);
+                    } else {
+                        alert("❌ डेटा डिलीट करने में कोई समस्या आई!");
+                    }
+                    resetBurnButton();
+                });
+            }
+        });
+    }
+
+    // बटन को सामान्य स्थिति में लाना
+    function resetBurnButton() {
+        if (burnDataBtn) {
+            burnDataBtn.innerHTML = '<span class="btn-icon">🔥</span> Burn Data';
+            burnDataBtn.style.background = "";
+            burnDataBtn.style.color = "";
         }
     }
-
-    // 6. 🎨 डायनामिक ओपेरा (Opera GX) थीम कंट्रोल
-    changeTheme(colorHex) {
-        document.documentElement.style.setProperty('--neon-color', colorHex);
-        localStorage.setItem('raja_theme', colorHex); // अगली बार के लिए सेव करना
-        console.log(`[THEME] Color changed to ${colorHex}`);
-    }
-
-    loadSavedTheme() {
-        const savedTheme = localStorage.getItem('raja_theme');
-        if (savedTheme) {
-            document.documentElement.style.setProperty('--neon-color', savedTheme);
-        }
-    }
-}
-
-// जैसे ही पेज लोड हो, ब्राउज़र का दिमाग चालू कर दें
-window.onload = () => {
-    window.rajaUI = new RajaSmartUI();
-};
-// --- 🔱 HTML बटन्स को एक्टिवेट करने वाले ग्लोबल ब्रिज फंक्शन्स ---
-
-function changeTheme(color) {
-    if(window.rajaUI) window.rajaUI.changeTheme(color);
-}
-
-function burnData() {
-    if(window.rajaUI) window.rajaUI.triggerDataBurn();
-}
-
-function handleCenterSearch() {
-    // यह काम पहले से Event Listener कर रहा है, इसलिए HTML को एरर देने से रोकने के लिए यह खाली है।
-}
-
-function goHome() {
-    document.getElementById('homeScreen').style.display = 'block';
-    if(document.getElementById('webFrame')) document.getElementById('webFrame').style.display = 'none';
-    if(document.getElementById('notesScreen')) document.getElementById('notesScreen').style.display = 'none';
-    if(document.getElementById('settingsScreen')) document.getElementById('settingsScreen').style.display = 'none';
-}
-
-function loadUrl(url, btnId) {
-    if(window.rajaUI) window.rajaUI.loadInFrame(url);
-}
-
-function openNotes() {
-    document.getElementById('homeScreen').style.display = 'none';
-    if(document.getElementById('webFrame')) document.getElementById('webFrame').style.display = 'none';
-    if(document.getElementById('settingsScreen')) document.getElementById('settingsScreen').style.display = 'none';
-    document.getElementById('notesScreen').style.display = 'block';
-}
-
-function openSettings() {
-    document.getElementById('homeScreen').style.display = 'none';
-    if(document.getElementById('webFrame')) document.getElementById('webFrame').style.display = 'none';
-    if(document.getElementById('notesScreen')) document.getElementById('notesScreen').style.display = 'none';
-    document.getElementById('settingsScreen').style.display = 'block';
-}
+});
